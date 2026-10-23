@@ -151,5 +151,5 @@ class Enrollment(Base):
     )
 
     # Relationships
-    student: Mapped["Student"] = relationship("Student", backref="enrollments")
-    course: Mapped["Course"] = relationship("Course", backref="enrollments")
+    student: Mapped["Student"] = relationship("Student", back_popluates="enrollments")
+    course: Mapped["Course"] = relationship("Course", back_popluates="enrollments")
