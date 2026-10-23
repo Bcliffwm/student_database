@@ -22,7 +22,9 @@ class FacultyMember(Base):
     name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
     department: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    courses: Mapped[Optional[list["Course"]]] = mapped_column(relationship("Course", back_populates="faculty_member"))
+    
+    # FIX: Removed mapped_column and Optional
+    courses: Mapped[list["Course"]] = relationship("Course", back_populates="faculty_member")
 
 class Course(Base):
     __tablename__ = "courses"
@@ -31,4 +33,6 @@ class Course(Base):
     name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     faculty_member_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("faculty_members.id"), nullable=True)
-    faculty_member: Mapped[Optional["FacultyMember"]] = mapped_column(relationship("FacultyMember", back_populates="courses"))
+    
+    # FIX: Removed mapped_column
+    faculty_member: Mapped[Optional["FacultyMember"]] = relationship("FacultyMember", back_populates="courses")
