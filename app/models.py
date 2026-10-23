@@ -1,7 +1,6 @@
-from datetime import datetime, timezone
-from typing import Optional
+from typing import Optional, List
 
-from sqlalchemy import DateTime, Integer, String, Text, ForeignKey
+from sqlalchemy import Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -10,30 +9,93 @@ from app.database import Base
 class Student(Base):
     __tablename__ = "students"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
-    name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
-    major: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    gpa: Mapped[Optional[float]] = mapped_column(nullable=True)
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(120),
+        nullable=False,
+        index=True
+    )
+
+    major: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    gpa: Mapped[Optional[float]] = mapped_column(
+        Float,
+        nullable=True
+    )
+
 
 class FacultyMember(Base):
     __tablename__ = "faculty_members"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
-    name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
-    department: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    # Need course_ids to establish a relationship with the Course model
-    course_ids: Mapped[list[int]] = mapped_column(ForeignKey("courses.id"))
-    # FIX: Removed mapped_column and Optional
-    courses: Mapped[list["Course"]] = relationship("Course", back_populates="faculty_member")
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(120),
+        nullable=False,
+        index=True
+    )
+
+    department: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    title: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    # One faculty member can teach multiple courses
+    courses: Mapped[List["Course"]] = relationship(
+        "Course",
+        back_populates="faculty_member"
+    )
+
 
 class Course(Base):
     __tablename__ = "courses"
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
-    name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
-    description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    faculty_member_id: Mapped[Optional[int]] = mapped_column(ForeignKey("faculty_members.id"))
-    
-    # FIX: Removed mapped_column
-    faculty_member: Mapped[Optional["FacultyMember"]] = relationship("FacultyMember", back_populates="courses")
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    name: Mapped[str] = mapped_column(
+        String(120),
+        nullable=False,
+        index=True
+    )
+
+    description: Mapped[Optional[str]] = mapped_column(
+        Text,
+        nullable=True
+    )
+
+    # Foreign key referencing FacultyMember
+    faculty_member_id: Mapped[Optional[int]] = mapped_column(
+        Integer,
+        ForeignKey("faculty_members.id"),
+        nullable=True
+    )
+
+    # Each course belongs to one faculty member
+    faculty_member: Mapped[Optional["FacultyMember"]] = relationship(
+        "FacultyMember",
+        back_populates="courses"
+    )
