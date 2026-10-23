@@ -1,17 +1,26 @@
-from datetime import datetime
 from typing import Optional, List
-# Using pydantic for data validation and serialization - explicitly defines what attributes and fields belong to each entity
+
 from pydantic import BaseModel, ConfigDict, Field
 
-# Defining Pydantic models to emmulate the database operations for each entity
+
+# ==========================================
+# Student Schemas
+# ==========================================
+
 class StudentCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
-    description: Optional[str] = None
+    major: Optional[str] = None
+    gpa: Optional[float] = Field(default=None, ge=0.0, le=4.0)
 
 
 class StudentUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=120)
-    description: Optional[str] = None
+    name: Optional[str] = Field(
+        default=None,
+        min_length=1,
+        max_length=120
+    )
+    major: Optional[str] = None
+    gpa: Optional[float] = Field(default=None, ge=0.0, le=4.0)
 
 
 class StudentRead(BaseModel):
@@ -19,47 +28,75 @@ class StudentRead(BaseModel):
 
     id: int
     name: str
-    description: str | None
-    created_at: datetime
+    major: Optional[str] = None
+    gpa: Optional[float] = None
+
+
+# ==========================================
+# Faculty Member Schemas
+# ==========================================
 
 class FacultyMemberCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
-    department: str | None = None
-    title: str | None = None
-    courses: Optional[List[int]] = None
+    department: Optional[str] = None
+    title: Optional[str] = None
+
 
 class FacultyMemberUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=120)
-    department: str | None = None
-    title: str | None = None
-    courses: Optional[List[int]] = None
+    name: Optional[str] = Field(
+        default=None,
+        min_length=1,
+        max_length=120
+    )
+    department: Optional[str] = None
+    title: Optional[str] = None
+
 
 class FacultyMemberRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     name: str
-    department: str | None
-    title: str | None
-    courses: list[int] | None
+    department: Optional[str] = None
+    title: Optional[str] = None
+
+
+# ==========================================
+# Course Schemas
+# ==========================================
 
 class CourseCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     description: Optional[str] = None
     faculty_member_id: Optional[int] = None
-    faculty_member: "FacultyMemberRead" | None = None
+
 
 class CourseUpdate(BaseModel):
-    name: str | None = Field(default=None, min_length=1, max_length=120)
+    name: Optional[str] = Field(
+        default=None,
+        min_length=1,
+        max_length=120
+    )
     description: Optional[str] = None
     faculty_member_id: Optional[int] = None
-    faculty_member: "FacultyMemberRead" | None = None
+
 
 class CourseRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
     name: str
-    description: str | None
-    faculty_member_id: int | None
-    faculty_member: "FacultyMemberRead" | None
+    description: Optional[str] = None
+    faculty_member_id: Optional[int] = None
+
+
+# ==========================================
+# Nested Relationship Schemas
+# ==========================================
+
+class FacultyMemberWithCourses(FacultyMemberRead):
+    courses: List[CourseRead] = Field(default_factory=list)
+
+
+class CourseWithFaculty(CourseRead):
+    faculty_member: Optional[FacultyMemberRead] = None
