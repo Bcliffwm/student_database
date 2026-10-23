@@ -1,16 +1,17 @@
 from datetime import datetime
+from typing import Optional, List
 # Using pydantic for data validation and serialization - explicitly defines what attributes and fields belong to each entity
 from pydantic import BaseModel, ConfigDict, Field
 
 # Defining Pydantic models to emmulate the database operations for each entity
 class StudentCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
-    description: str | None = None
+    description: Optional[str] = None
 
 
 class StudentUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
-    description: str | None = None
+    description: Optional[str] = None
 
 
 class StudentRead(BaseModel):
@@ -25,13 +26,13 @@ class FacultyMemberCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     department: str | None = None
     title: str | None = None
-    courses: list[int] | None = None
+    courses: Optional[List[int]] = None
 
 class FacultyMemberUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
     department: str | None = None
     title: str | None = None
-    courses: list[int] | None = None
+    courses: Optional[List[int]] = None
 
 class FacultyMemberRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -44,13 +45,13 @@ class FacultyMemberRead(BaseModel):
 
 class CourseCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
-    description: str | None = None
+    description: Optional[str] = None
     faculty_member_id: int | None = None
     faculty_member: "FacultyMemberRead" | None = None
 
 class CourseUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
-    description: str | None = None
+    description: Optional[str] = None
     faculty_member_id: int | None = None
     faculty_member: "FacultyMemberRead" | None = None
 
