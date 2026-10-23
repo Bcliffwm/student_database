@@ -19,6 +19,7 @@ def load_data():
         FacultyMember(name="Dr. Lee", department="Physics", title="Assistant Professor"),
     ]
     db.add_all(faculty_members)
+    db.flush()  # Flush to get the IDs of faculty members for course assignment
 
     # Load Courses
     courses = [

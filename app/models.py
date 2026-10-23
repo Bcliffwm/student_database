@@ -76,7 +76,7 @@ class Course(Base):
         autoincrement=True
     )
 
-    name: Mapped[str] = mapped_column(
+    title: Mapped[str] = mapped_column(
         String(120),
         nullable=False,
         index=True
