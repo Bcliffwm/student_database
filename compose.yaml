@@ -1,12 +1,17 @@
 services:
   api:
-    build: .
+    image: ${IMAGE_NAME}
+    container_name: ${CONTAINER_NAME}
+
     environment:
-      DATABASE_URL: sqlite:////data/university.db
+      DATABASE_URL: ${DATABASE_URL}
     ports:
-      - "8000:8000"
+      - "127.0.0.1:${HOST_PORT}:8000"
     volumes:
       - university_data:/data
 
+    restart: unless-stopped
+
 volumes:
   university_data:
+    external: true

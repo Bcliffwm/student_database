@@ -62,8 +62,11 @@ def create_course(payload: CourseCreate, db: Session = Depends(get_db)):
 
 @app.post("/enrollments", response_model=EnrollmentRead, status_code=status.HTTP_201_CREATED)
 def create_enrollment(payload: EnrollmentCreate, db: Session = Depends(get_db)):
+    if db.get(models.Student, payload.student_id) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
+    if db.get(models.Course, payload.course_id) is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
     enrollment = models.Enrollment(**payload.model_dump())
-    db.add(enrollment)
     db.commit()
     db.refresh(enrollment)
     return enrollment
