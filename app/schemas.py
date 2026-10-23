@@ -100,3 +100,31 @@ class FacultyMemberWithCourses(FacultyMemberRead):
 
 class CourseWithFaculty(CourseRead):
     faculty_member: Optional[FacultyMemberRead] = None
+
+
+# ==========================================
+# Enrollment Schemas
+# ==========================================
+class EnrollmentCreate(BaseModel):
+    student_id: int
+    course_id: int
+    semester: str = Field(min_length=1, max_length=30)
+    grade: Optional[str] = Field(default=None, min_length=1, max_length=2)
+
+class EnrollmentRead(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    student_id: int
+    course_id: int
+    semester: str
+    grade: Optional[str] = None
+    enrollment_date: Optional[str] = None
+
+class EnrollmentWithDetails(EnrollmentRead):
+    student: Optional[StudentRead] = None
+    course: Optional[CourseRead] = None
+
+class EnrollmentUpdate(BaseModel):
+    semester: Optional[str] = None
+    grade: Optional[str] = None

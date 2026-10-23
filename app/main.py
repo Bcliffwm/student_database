@@ -10,6 +10,7 @@ from app.database import Base, engine, get_db
 from app.schemas import StudentCreate, StudentRead, StudentUpdate
 from app.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
 from app.schemas import CourseCreate, CourseRead, CourseUpdate
+from app.schemas import EnrollmentCreate, EnrollmentRead, EnrollmentUpdate
 from app.load_data import load_data
 
 
@@ -59,6 +60,14 @@ def create_course(payload: CourseCreate, db: Session = Depends(get_db)):
     db.refresh(course)
     return course
 
+@app.post("/enrollments", response_model=EnrollmentRead, status_code=status.HTTP_201_CREATED)
+def create_enrollment(payload: EnrollmentCreate, db: Session = Depends(get_db)):
+    enrollment = models.Enrollment(**payload.model_dump())
+    db.add(enrollment)
+    db.commit()
+    db.refresh(enrollment)
+    return enrollment
+
 # Listing Entities: Students, Faculty Members, and Courses
 @app.get("/students", response_model=List[StudentRead])
 def list_students(
@@ -87,6 +96,16 @@ def list_courses(
     statement = select(models.Course).order_by(models.Course.id).offset(offset).limit(limit)
     return db.scalars(statement).all()
 
+@app.get("/enrollments", response_model=List[EnrollmentRead])
+def list_enrollments(
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=100, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
+    statement = select(models.Enrollment).order_by(models.Enrollment.id).offset(offset).limit(limit)
+    return db.scalars(statement).all()
+
+
 # Retreive Operations for Database Entities: Students, Faculty Members, and Courses
 @app.get("/students/{student_id}", response_model=StudentRead)
 def get_student(student_id: int, db: Session = Depends(get_db)):
@@ -108,6 +127,13 @@ def get_course(course_id: int, db: Session = Depends(get_db)):
     if course is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
     return course
+
+@app.get("/enrollments/{enrollment_id}", response_model=EnrollmentRead)
+def get_enrollment(enrollment_id: int, db: Session = Depends(get_db)):
+    enrollment = db.get(models.Enrollment, enrollment_id)
+    if enrollment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Enrollment not found")
+    return enrollment
 
 # Update Operations for Database Entities: Students, Faculty Members, and Courses
 @app.patch("/students/{student_id}", response_model=StudentRead)
@@ -143,6 +169,17 @@ def update_course(course_id: int, payload: CourseUpdate, db: Session = Depends(g
     db.refresh(course)
     return course
 
+@app.patch("/enrollments/{enrollment_id}", response_model=EnrollmentRead)
+def update_enrollment(enrollment_id: int, payload: EnrollmentUpdate, db: Session = Depends(get_db)):
+    enrollment = db.get(models.Enrollment, enrollment_id)
+    if enrollment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Enrollment not found")
+    for field, value in payload.model_dump(exclude_unset=True).items():
+        setattr(enrollment, field, value)
+    db.commit()
+    db.refresh(enrollment)
+    return enrollment
+
 # Delete Operations for Database Entities: Students, Faculty Members, and Courses
 @app.delete("/students/{student_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_student(student_id: int, db: Session = Depends(get_db)):
@@ -168,5 +205,14 @@ def delete_course(course_id: int, db: Session = Depends(get_db)):
     if course is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
     db.delete(course)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@app.delete("/enrollments/{enrollment_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_enrollment(enrollment_id: int, db: Session = Depends(get_db)):
+    enrollment = db.get(models.Enrollment, enrollment_id)
+    if enrollment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Enrollment not found")
+    db.delete(enrollment)
     db.commit()
     return Response(status_code=status.HTTP_204_NO_CONTENT)
