@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from app import models
 from app.database import Base, engine, get_db
 from app.schemas import StudentCreate, StudentRead, StudentUpdate
+from app.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
+from app.schemas import CourseCreate, CourseRead, CourseUpdate
 
 
 @asynccontextmanager
