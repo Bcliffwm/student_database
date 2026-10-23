@@ -29,7 +29,7 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-Without `DATABASE_URL`, the local server uses `./app.db` (SQLite). For another database, set `DATABASE_URL` to a SQLAlchemy URL and install the corresponding driver. PostgreSQL uses `postgresql+psycopg://...`; MySQL/MariaDB and other engines need their respective SQLAlchemy dialect drivers.
+Without `DATABASE_URL`, the local server uses `./university.db` (SQLite). For another database, set `DATABASE_URL` to a SQLAlchemy URL and install the corresponding driver. PostgreSQL uses `postgresql+psycopg://...`; MySQL/MariaDB and other engines need their respective SQLAlchemy dialect drivers.
 
 ## Test
 

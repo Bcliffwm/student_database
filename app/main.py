@@ -10,6 +10,7 @@ from app.database import Base, engine, get_db
 from app.schemas import StudentCreate, StudentRead, StudentUpdate
 from app.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
 from app.schemas import CourseCreate, CourseRead, CourseUpdate
+from app.load_data import load_initial_data
 
 
 @asynccontextmanager
@@ -20,6 +21,7 @@ async def lifespan(_: FastAPI):
 # Setting up FastAPI application with title and lifespan context manager
 app = FastAPI(title="Docker Database API", lifespan=lifespan)
 
+load_initial_data()  # Load initial data into the database
 
 # Checking app health status
 @app.get("/health")
