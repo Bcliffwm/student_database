@@ -86,6 +86,11 @@ class Course(Base):
         Text,
         nullable=True
     )
+    
+    credits: Mapped[Optional[int]] = mapped_column(
+        Integer,
+        nullable=True
+    )
 
     # Foreign key referencing FacultyMember
     faculty_member_id: Mapped[Optional[int]] = mapped_column(
