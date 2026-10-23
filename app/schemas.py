@@ -46,13 +46,13 @@ class FacultyMemberRead(BaseModel):
 class CourseCreate(BaseModel):
     name: str = Field(min_length=1, max_length=120)
     description: Optional[str] = None
-    faculty_member_id: int | None = None
+    faculty_member_id: Optional[int] = None
     faculty_member: "FacultyMemberRead" | None = None
 
 class CourseUpdate(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
     description: Optional[str] = None
-    faculty_member_id: int | None = None
+    faculty_member_id: Optional[int] = None
     faculty_member: "FacultyMemberRead" | None = None
 
 class CourseRead(BaseModel):
