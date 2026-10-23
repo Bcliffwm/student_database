@@ -16,12 +16,16 @@ from app.load_data import load_data
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
+    print("Database tables created.")
+
+    print("Loading initial data into the database...")
+    load_data()  # Load initial data into the database
     yield
 
-# Setting up FastAPI application with title and lifespan context manager
+# Initialize FastAPI
 app = FastAPI(title="Docker Database API", lifespan=lifespan)
 
-load_data()  # Load initial data into the database
+
 
 # Checking app health status
 @app.get("/health")
@@ -111,7 +115,7 @@ def update_student(student_id: int, payload: StudentUpdate, db: Session = Depend
     student = db.get(models.Student, student_id)
     if student is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student not found")
-    for field, value in payload.model_dump(exclude_unset=True).students():
+    for field, value in payload.model_dump(exclude_unset=True).items():
         setattr(student, field, value)
     db.commit()
     db.refresh(student)
