@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-
+from Typing import List, Optional
 from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -53,7 +53,7 @@ def create_course(payload: CourseCreate, db: Session = Depends(get_db)):
     return course
 
 # Listing Entities: Students, Faculty Members, and Courses
-@app.get("/students", response_model=list[StudentRead])
+@app.get("/students", response_model=List[StudentRead])
 def list_students(
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=100),
@@ -62,7 +62,7 @@ def list_students(
     statement = select(models.Student).order_by(models.Student.id).offset(offset).limit(limit)
     return db.scalars(statement).all()
 
-@app.get("/faculty_members", response_model=list[FacultyMemberRead])
+@app.get("/faculty_members", response_model=List[FacultyMemberRead])
 def list_faculty_members(
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=100),
@@ -71,7 +71,7 @@ def list_faculty_members(
     statement = select(models.FacultyMember).order_by(models.FacultyMember.id).offset(offset).limit(limit)
     return db.scalars(statement).all()
 
-@app.get("/courses", response_model=list[CourseRead])
+@app.get("/courses", response_model=List[CourseRead])
 def list_courses(
     offset: int = Query(default=0, ge=0),
     limit: int = Query(default=100, ge=1, le=100),
