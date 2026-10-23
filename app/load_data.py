@@ -23,9 +23,9 @@ def load_data():
 
     # Load Courses
     courses = [
-        Course(title="Introduction to Programming", description="Learn the basics of programming.", credits=3, faculty_member_id=1),
-        Course(title="Calculus I", description="An introduction to calculus.", credits=4, faculty_member_id=2),
-        Course(title="Physics I", description="Fundamentals of physics.", credits=4, faculty_member_id=3),
+        Course(title="Introduction to Programming", description="Learn the basics of programming.", credits=3, faculty_member_id=faculty_members[0].id),
+        Course(title="Calculus I", description="An introduction to calculus.", credits=4, faculty_member_id=faculty_members[1].id),
+        Course(title="Physics I", description="Fundamentals of physics.", credits=4, faculty_member_id=faculty_members[2].id),
     ]
     db.add_all(courses)
 
