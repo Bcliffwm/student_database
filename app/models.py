@@ -1,6 +1,7 @@
 from typing import Optional, List
+from datetime import datetime, timezone
 
-from sqlalchemy import Integer, String, Text, Float, ForeignKey
+from sqlalchemy import DateTime, Integer, String, Text, Float, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -13,7 +14,8 @@ class Student(Base):
         Integer,
         primary_key=True,
         index=True,
-        autoincrement=True
+        autoincrement=True,
+        unique=True
     )
 
     name: Mapped[str] = mapped_column(
@@ -32,6 +34,11 @@ class Student(Base):
         nullable=True
     )
 
+    enrollments: Mapped[List["Enrollment"]] = relationship(
+        "Enrollment",
+        back_populates="student"
+    )
+
 
 class FacultyMember(Base):
     __tablename__ = "faculty_members"
@@ -40,7 +47,8 @@ class FacultyMember(Base):
         Integer,
         primary_key=True,
         index=True,
-        autoincrement=True
+        autoincrement=True,
+        unique=True
     )
 
     name: Mapped[str] = mapped_column(
@@ -73,7 +81,8 @@ class Course(Base):
         Integer,
         primary_key=True,
         index=True,
-        autoincrement=True
+        autoincrement=True,
+        unique=True
     )
 
     title: Mapped[str] = mapped_column(
@@ -104,3 +113,43 @@ class Course(Base):
         "FacultyMember",
         back_populates="courses"
     )
+
+class Enrollment(Base):
+    __tablename__ = "enrollments"
+
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        index=True,
+        autoincrement=True
+    )
+
+    student_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("students.id"),
+        nullable=False
+    )
+
+    course_id: Mapped[int] = mapped_column(
+        Integer,
+        ForeignKey("courses.id"),
+        nullable=False
+    )
+
+    semester: Mapped[str] = mapped_column(
+        String(30),
+        nullable=False
+    )
+
+    grade: Mapped[Optional[str]] = mapped_column(
+        String(2),
+        nullable=True
+    )
+    enrollment_date: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc)
+    )
+
+    # Relationships
+    student: Mapped["Student"] = relationship("Student", backref="enrollments")
+    course: Mapped["Course"] = relationship("Course", backref="enrollments")
