@@ -22,7 +22,8 @@ class FacultyMember(Base):
     name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
     department: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     title: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    
+    # Need course_ids to establish a relationship with the Course model
+    course_ids: Mapped[list[int]] = mapped_column(ForeignKey("courses.id"))
     # FIX: Removed mapped_column and Optional
     courses: Mapped[list["Course"]] = relationship("Course", back_populates="faculty_member")
 
@@ -32,7 +33,7 @@ class Course(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
     name: Mapped[Optional[str]] = mapped_column(String(120), nullable=False, index=True)
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
-    faculty_member_id: Mapped[Optional[int]] = mapped_column(Integer, ForeignKey("faculty_members.id"), nullable=True)
+    faculty_member_id: Mapped[Optional[int]] = mapped_column(ForeignKey("faculty_members.id"))
     
     # FIX: Removed mapped_column
     faculty_member: Mapped[Optional["FacultyMember"]] = relationship("FacultyMember", back_populates="courses")
