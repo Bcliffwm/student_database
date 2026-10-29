@@ -13,6 +13,7 @@ from app.database.schemas import CourseCreate, CourseRead, CourseUpdate
 from app.database.schemas import EnrollmentCreate, EnrollmentRead, EnrollmentUpdate
 from app.database.load_data import load_data, check_database
 
+import os
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
@@ -20,7 +21,7 @@ async def lifespan(_: FastAPI):
     print("Database tables created.")
 
     # Check to see if database file already has data
-    if not check_database():    
+    if not check_database(os.getenv('DATABSE_PATH')):    
         print("Loading initial data into the database...")
         load_data()  # Load initial data into the database
     yield
