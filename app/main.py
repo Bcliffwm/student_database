@@ -21,9 +21,12 @@ async def lifespan(_: FastAPI):
     print("Database tables created.")
 
     # Check to see if database file already has data
-    if not check_database(os.getenv('DATABSE_PATH')):    
+    if not check_database():
         print("Loading initial data into the database...")
-        load_data()  # Load initial data into the database
+        load_data()
+    else:
+        print("Database already contains data; skipping initial load.")
+    
     yield
 
 # Initialize FastAPI

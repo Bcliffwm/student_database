@@ -7,10 +7,8 @@ from pathlib import Path # checking to see if there's any data
 def check_database() -> bool:
     db = SessionLocal()
     try:
-        # Seed only if the Student table is still empty
-        existing_student = db.scalar(select(Student.id)).limit(1)
+        existing_student = db.scalar(select(Student.id).limit(1))
         return existing_student is not None
-    
     finally:
         db.close()
 
