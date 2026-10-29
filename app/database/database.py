@@ -12,7 +12,7 @@ DATABASE_URL = os.getenv(
 
 # SQLite requires the parent directory to exist
 if DATABASE_URL.startswith("sqlite:////data/"):
-    os.makedirs("/data", exist_ok=True)
+    os.makedirs("data", exist_ok=True)
 
 # SQLite-specific connection arguments
 connect_args = (
