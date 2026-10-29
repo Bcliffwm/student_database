@@ -1,5 +1,5 @@
-from app.database import SessionLocal
-from app.models import Student, FacultyMember, Course
+from app.database.database import SessionLocal
+from app.database.models import Student, FacultyMember, Course
 
 def load_data():
     db = SessionLocal()
