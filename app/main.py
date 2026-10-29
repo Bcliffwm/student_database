@@ -11,7 +11,7 @@ from app.database.schemas import StudentCreate, StudentRead, StudentUpdate
 from app.database.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
 from app.database.schemas import CourseCreate, CourseRead, CourseUpdate
 from app.database.schemas import EnrollmentCreate, EnrollmentRead, EnrollmentUpdate
-from app.database.load_data import load_data
+from app.database.load_data import load_data, check_database
 
 
 @asynccontextmanager
@@ -19,8 +19,10 @@ async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
     print("Database tables created.")
 
-    print("Loading initial data into the database...")
-    load_data()  # Load initial data into the database
+    # Check to see if database file already has data
+    if not check_database():    
+        print("Loading initial data into the database...")
+        load_data()  # Load initial data into the database
     yield
 
 # Initialize FastAPI

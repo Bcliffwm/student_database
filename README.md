@@ -36,3 +36,7 @@ Without `DATABASE_URL`, the local server uses `./university.db` (SQLite). For an
 ```powershell
 pytest
 ```
+
+## Running using Docker (RECOMMENDED):
+python -m venv .venv
+docker compose up -d

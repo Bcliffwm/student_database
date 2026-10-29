@@ -1,6 +1,18 @@
 from app.database.database import SessionLocal
 from app.database.models import Student, FacultyMember, Course
 
+from pathlib import Path # checking to see if there's any data
+def check_database(db_path: str) -> bool:
+    path = Path(db_path)
+
+    # Checking if database file is indeed a file
+    if not path.is_file():
+        return False
+    
+    # If the database file is empty, then return false
+    if path.stat().st_size == 0:
+        return False
+    return True
 def load_data():
     db = SessionLocal()
 
