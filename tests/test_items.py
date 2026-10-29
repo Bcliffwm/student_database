@@ -7,7 +7,7 @@ from sqlalchemy.pool import StaticPool
 
 os.environ["DATABASE_URL"] = "sqlite://"
 
-from app.database import Base, get_db
+from app.database.database import Base, get_db
 from app.main import app
 
 

@@ -5,13 +5,13 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app import models
-from app.database import Base, engine, get_db
-from app.schemas import StudentCreate, StudentRead, StudentUpdate
-from app.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
-from app.schemas import CourseCreate, CourseRead, CourseUpdate
-from app.schemas import EnrollmentCreate, EnrollmentRead, EnrollmentUpdate
-from app.load_data import load_data
+from app.database import models
+from app.database.database import Base, engine, get_db
+from app.database.schemas import StudentCreate, StudentRead, StudentUpdate
+from app.database.schemas import FacultyMemberCreate, FacultyMemberRead, FacultyMemberUpdate
+from app.database.schemas import CourseCreate, CourseRead, CourseUpdate
+from app.database.schemas import EnrollmentCreate, EnrollmentRead, EnrollmentUpdate
+from app.database.load_data import load_data
 
 
 @asynccontextmanager
