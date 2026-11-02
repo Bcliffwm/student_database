@@ -111,7 +111,7 @@ class Course(Base):
     # Each course belongs to one faculty member
     faculty_member: Mapped[Optional["FacultyMember"]] = relationship(
         "FacultyMember",
-        back_populates="course"
+        back_populates="courses"
     )
 
     enrollments: Mapped[List["Enrollment"]] = relationship(
