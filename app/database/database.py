@@ -5,6 +5,7 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 
 # Database connection configuration
+# Adding safe comment DELETE ME
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
     "sqlite:////data/university.db"
