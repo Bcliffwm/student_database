@@ -15,6 +15,9 @@ from app.database.load_data import load_data, check_database
 
 import os
 
+# Defining app here
+app = FastAPI()
+
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
