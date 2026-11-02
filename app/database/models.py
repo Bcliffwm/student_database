@@ -114,6 +114,11 @@ class Course(Base):
         back_populates="courses"
     )
 
+    enrollments: Mapped[List["Enrollment"]] = relationship(
+        "Enrollment",
+        back_populates="courses"
+    )
+
 class Enrollment(Base):
     __tablename__ = "enrollments"
 
