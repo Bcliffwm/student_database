@@ -22,6 +22,7 @@ async def lifespan(_: FastAPI):
 
     # Check to see if database file already has data
     if not check_database():
+        print(check_database())
         print("Loading initial data into the database...")
         load_data()
     else:
