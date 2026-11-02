@@ -20,18 +20,16 @@ async def lifespan(_: FastAPI):
     Base.metadata.create_all(bind=engine)
     print("Database tables created.")
 
-    # Check to see if database file already has data
-    if not check_database():
-        print(check_database())
+    has_data = check_database()
+    print(f"Database has seed data: {has_data}")
+
+    if not has_data:
         print("Loading initial data into the database...")
         load_data()
     else:
         print("Database already contains data; skipping initial load.")
-    
-    yield
 
-# Initialize FastAPI
-app = FastAPI(title="Docker Database API", lifespan=lifespan)
+    yield
 
 
 
